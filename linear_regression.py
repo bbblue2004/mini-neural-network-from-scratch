@@ -1,4 +1,4 @@
-# Let's code a binary classifier from scratch with a linear regression
+# Let's code a binary classifier from scratch with a logistic regression
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -41,4 +41,23 @@ def plot_data():
     plt.show()
 
 
-######
+###### Useful functions ######
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+
+def accuracy(y, yhat):
+    return np.sum(yhat == y) / len(y)
+
+
+###### Training of the model ######
+
+# parameters
+w = np.array([0, 0])
+b = 0
+
+def forward():
+    scores = np.array([sigmoid(np.dot(w, x) + b) for x in X])
+    yhat = np.array([int(s >= 0.5) for s in scores])
+    return yhat
