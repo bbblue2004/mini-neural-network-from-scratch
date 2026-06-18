@@ -19,14 +19,16 @@ n = 200 # number of points per class
 ### new code (correct)
 np.random.seed(42)
 
-points_0 = c0 + np.random.normal(loc=0.0, scale=sigma, size=(n, 2))
-points_1 = c1 + np.random.normal(loc=0.0, scale=sigma, size=(n, 2))
-labels_0 = np.zeros(n)
-labels_1 = np.ones(n)
+def data():
+    points_0 = c0 + np.random.normal(loc=0.0, scale=sigma, size=(n, 2))
+    points_1 = c1 + np.random.normal(loc=0.0, scale=sigma, size=(n, 2))
+    labels_0 = np.zeros(n)
+    labels_1 = np.ones(n)
 
-X = np.concatenate([points_0, points_1], axis=0)   # np.concatenate(list of arrays, axis)
-y = np.concatenate([labels_0, labels_1], axis=0)
+    X = np.concatenate([points_0, points_1], axis=0)   # np.concatenate(list of arrays, axis)
+    y = np.concatenate([labels_0, labels_1], axis=0)
 
+    return X, y
 
 ###### PLOT ######
 
@@ -46,18 +48,33 @@ def plot_data():
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
-
 def accuracy(y, yhat):
     return np.sum(yhat == y) / len(y)
 
-
-###### Training of the model ######
-
-# parameters
-w = np.array([0, 0])
-b = 0
+def binary_cross_entropy(y, yhat):
+    yhat = np.clip(yhat, 1e-15, 1 - 1e-15)      # to avoid getting NaN
+    return np.mean(-y * np.log(yhat) - (1 - y) * np.log(1 - yhat))
 
 def forward():
     scores = np.array([sigmoid(np.dot(w, x) + b) for x in X])
     yhat = np.array([int(s >= 0.5) for s in scores])
     return yhat
+
+###### Training of the model ######
+
+
+
+
+
+if __name__ == '__main__':
+    # data
+    X, y = data()
+
+    # parameters
+    w = np.array([0, 0])
+    b = 0
+
+    yhat = forward()
+
+    print(f"Initial accuracy: {accuracy(y, yhat)}")
+    print(f"Initial loss: {binary_cross_entropy(y, yhat)}")
