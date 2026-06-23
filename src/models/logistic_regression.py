@@ -1,7 +1,7 @@
 # Binary classifier from scratch with a logistic regression
 
 import numpy as np
-from src.visualization import plot_losses
+from src.utils.visualization import plot_losses
 
 
 def sigmoid(x):

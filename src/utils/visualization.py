@@ -27,3 +27,13 @@ def plot_inference(X_inf, predictions):
     plt.ylabel("y")
     plt.grid(True, linestyle='--', alpha=0.8)
     plt.savefig(IMAGES_DIR / "prediction.png")
+
+
+def plot_non_lin_sep_data(X, y):
+    plt.figure(figsize=(8, 6))
+    plt.scatter(X[:, 0], X[:, 1], c=y, cmap = 'viridis', edgecolors='k', alpha=0.7)   # plt.scatter permet de créer des nuages de points
+    plt.title("Points du plan X et labels y = 0 ou 1.")
+    plt.xlabel("Abscisse")
+    plt.ylabel("Ordonnée")
+    plt.grid(True, linestyle='--', alpha=0.8)
+    plt.savefig(IMAGES_DIR / "non_lin_sep_data.png")

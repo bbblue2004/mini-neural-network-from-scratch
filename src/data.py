@@ -30,3 +30,22 @@ def gen_inference():
     points = c + np.random.normal(loc=0.0, scale=sigma, size=(n, 2))
 
     return points
+
+
+# non linearly separable dataset. There are two classes, one around the center (0, 0) and one at distance approx = 2 from the center
+def gen_non_lin_sep_train(): 
+    sigma = SIGMA / 2
+    n = N_PER_CLASS
+
+    points_0 = np.random.normal(loc=0.0, scale=sigma, size=(n, 2))
+    
+    r = np.random.uniform(3*0.8, 3*1.2, size=n)
+    theta = np.random.uniform(0, 2*np.pi, size=n)
+    points_1 = np.column_stack([r * np.cos(theta), r * np.sin(theta)])
+    labels_0 = np.zeros(n)
+    labels_1 = np.ones(n)
+
+    X = np.concatenate([points_0, points_1], axis=0)
+    y = np.concatenate([labels_0, labels_1], axis=0)
+
+    return X, y
