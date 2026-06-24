@@ -2,11 +2,7 @@
 
 import numpy as np
 from src.utils.visualization import plot_losses
-
-
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
-
+from src.utils.utils import sigmoid, binary_cross_entropy
 
 
 ###### MODEL #######
@@ -14,11 +10,9 @@ def sigmoid(x):
 
 class LogisticRegression:
 
-    def __init__(self, X, y, lr=0.1):
-        self.w, self.b = np.zeros(X.shape[1]), 0.0
-        self.X, self.y = X, y
+    def __init__(self, input_size, lr=0.1):
+        self.w, self.b = np.zeros(input_size), 0.0
         self.lr = lr
-        self.n = len(X)
 
     def predict(self, yhat):
         return yhat >= 0.5
@@ -26,39 +20,42 @@ class LogisticRegression:
     def accuracy(self, y, yhat):
         return np.mean((yhat >= 0.5) == y)
 
-    def loss(self):         # binary cross-entropy
-        # self.yhat = np.clip(self.yhat, 1e-15, 1 - 1e-15)      # to avoid getting NaN
-        return np.mean(-self.y * np.log(self.yhat) - (1 - self.y) * np.log(1 - self.yhat))
+    def loss(self, y, yhat):         # binary cross-entropy
+        yhat = np.clip(yhat, 1e-15, 1 - 1e-15)      # to avoid getting NaN
+        return binary_cross_entropy(y, yhat)
 
     def forward(self, X):
-        self.yhat = sigmoid(X @ self.w + self.b)   # or np.dot(w, x)
-        return self.yhat
+        yhat = sigmoid(X @ self.w + self.b)   # or np.dot(w, x)
+        return yhat
 
-    def backprop(self):
-        w_grad = np.dot(self.X.transpose(), (self.yhat - self.y)) / self.n
-        b_grad = np.dot(np.ones(self.n).transpose(), (self.yhat - self.y)) / self.n  # or np.mean(self.yhat - self.y)
+    def backprop(self, X, y, yhat):
+        n = len(X)
+        w_grad = np.dot(X.T, (yhat - y)) / n
+        b_grad = np.ones(X.shape[0]).T @ (yhat - y) / n  # or np.mean(yhat - y)
         self.w -= self.lr * w_grad
         self.b -= self.lr * b_grad
 
     
-    def train(self, epochs=10, save_plot_losses=False):
+    def train(self, X, y, epochs=10, save_plot_losses=False):
         losses = []
 
         for epoch in range(1, epochs + 1):
             print(f"======= For epoch {epoch} =======\n")
-            self.forward(self.X)
-            current_loss = self.loss()
+            yhat = self.forward(X)
+            self.backprop(X, y, yhat)
+            current_loss = self.loss(y, yhat)
             losses.append(current_loss)
-            self.backprop()
             print(f"Loss = {current_loss}")
-            print(f"Accuracy = {self.accuracy(self.y, self.yhat)}\n")
+            print(f"Accuracy = {self.accuracy(y, yhat)}\n")
         
         if save_plot_losses:
             plot_losses(losses)
 
     
-    def inference(self, X_inf):
-        yhat_inf = self.forward(X_inf)
-        predictions = self.predict(yhat_inf)
+    def test(self, X_test, y_test):
+        yhat_test = self.forward(X_test)
+        predictions = self.predict(yhat_test)
+        accuracy = self.accuracy(y_test, yhat_test)
+        print(f"Accuracy on test points = {self.accuracy(y_test, yhat_test)}\n")
         return predictions
 

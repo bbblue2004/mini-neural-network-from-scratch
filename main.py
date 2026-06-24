@@ -1,17 +1,21 @@
-from src.data import gen_inference, gen_train, gen_non_lin_sep_train
-from src.models.logistic_regression import LogisticRegression
-from src.utils.visualization import plot_losses, plot_train, plot_inference, plot_non_lin_sep_data
-from src.config import LR, EPOCHS
-import sys
+import numpy as np
 
+from src.data import gen_test, gen_train, gen_non_lin_sep_train, gen_non_lin_sep_test
+from src.models.logistic_regression import LogisticRegression
+from src.models.neural_network import NN
+from src.utils.visualization import plot_losses, plot_train, plot_test, plot_non_lin_sep_train, plot_non_lin_sep_test
+from src.config import LR, EPOCHS, SEED
+import sys
+np.random.seed(SEED)
 
 X_train, y_train = gen_non_lin_sep_train()
-model = LogisticRegression(X_train, y_train, lr=LR)
-plot_non_lin_sep_data(X_train, y_train)
-sys.exit()
+input_size = X_train.shape[1]
 
-model.train(epochs=EPOCHS, save_plot_losses=True)
+model = NN(input_size, 8, lr=LR)
+plot_non_lin_sep_train(X_train, y_train)
 
-X_inf = gen_inference()
-predictions = model.inference(X_inf)
-plot_inference(X_inf, predictions)
+model.train(X_train, y_train, epochs=EPOCHS, save_plot_losses=True)
+
+X_test, y_test = gen_non_lin_sep_test()
+predictions = model.test(X_test, y_test)
+plot_non_lin_sep_test(X_test, predictions)
