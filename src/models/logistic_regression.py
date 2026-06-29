@@ -36,11 +36,11 @@ class LogisticRegression:
         self.b -= self.lr * b_grad
 
     
-    def train(self, X, y, epochs=10, save_plot_losses=False):
+    def train(self, X, y, epochs=10, loss_dir=None):
         losses = []
 
         for epoch in range(1, epochs + 1):
-            print(f"======= For epoch {epoch} =======\n")
+            print(f"Epoch {epoch}/{epochs}\n")
             yhat = self.forward(X)
             self.backprop(X, y, yhat)
             current_loss = self.loss(y, yhat)
@@ -48,14 +48,14 @@ class LogisticRegression:
             print(f"Loss = {current_loss}")
             print(f"Accuracy = {self.accuracy(y, yhat)}\n")
         
-        if save_plot_losses:
-            plot_losses(losses)
+        if loss_dir is not None:
+            plot_losses(losses, loss_dir)
 
     
     def test(self, X_test, y_test):
         yhat_test = self.forward(X_test)
         predictions = self.predict(yhat_test)
         accuracy = self.accuracy(y_test, yhat_test)
-        print(f"Accuracy on test points = {self.accuracy(y_test, yhat_test)}\n")
+        print(f"Test accuracy: {self.accuracy(y_test, yhat_test)}\n")
         return predictions
 
