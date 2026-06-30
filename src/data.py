@@ -46,7 +46,7 @@ def gen_non_lin_sep_train():
 
     points_0 = np.random.normal(loc=0.0, scale=sigma, size=(n, 2))
     
-    r = np.random.uniform(4*0.8, 4*1.2, size=n)
+    r = np.random.uniform(3.2, 4.8, size=n)
     theta = np.random.uniform(0, 2*np.pi, size=n)
     points_1 = np.column_stack([r * np.cos(theta), r * np.sin(theta)])
     labels_0 = np.zeros(n)

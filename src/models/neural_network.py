@@ -7,7 +7,7 @@ class Layer:
 
     def __init__(self, k, input_size, activation):
         self.k = k              # number of neurons in the layer
-        self.W = np.random.randn(k, input_size) * np.sqrt(2.0 / input_size)       # at first all weights were set to 0 but the network could not learn
+        self.W = np.random.randn(k, input_size) * np.sqrt(2.0 / input_size)       # at first all weights were set to 0 but the network could not learn: this is called He-scaling
         self.b = np.zeros(k)
         self.activation = activation
     

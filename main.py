@@ -3,7 +3,7 @@ import numpy as np
 from src.data import gen_test, gen_train, gen_non_lin_sep_train, gen_non_lin_sep_test
 from src.models.logistic_regression import LogisticRegression
 from src.models.neural_network import NN
-from src.utils.visualization import plot_losses, plot_train, plot_test
+from src.utils.visualization import plot_train, plot_test
 from src.config import LR, EPOCHS, SEED
 
 
